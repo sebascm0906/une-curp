@@ -123,11 +123,11 @@
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    document.getElementById('mensaje').innerText = `✅ CURP registrado: ${docSnap.data().nombre}`;
-                    document.getElementById('mensaje').style.color = "green";
-                } else {
-                    document.getElementById('mensaje').innerText = '❌ CURP disponible para registro';
+                    document.getElementById('mensaje').innerText = ` CURP registrado: ${docSnap.data().nombre}`;
                     document.getElementById('mensaje').style.color = "red";
+                } else {
+                    document.getElementById('mensaje').innerText = '✅CURP disponible para registro';
+                    document.getElementById('mensaje').style.color = "green";
                 }
             } catch (error) {
                 console.error("❌ Error verificando CURP:", error);
