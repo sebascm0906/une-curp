@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar CURP</title>
+
+    <!-- ✅ Estilos CSS -->
+    <style>
+        /* 🔹 Estilos globales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2); /* Fondo con degradado */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* 🔹 Contenedor del formulario */
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background: #564baf;
+        }
+
+        /* 🔹 Mensaje de estado */
+        #mensaje {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* 🔹 Diseño responsivo */
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+
+            input, button {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✅ Contenedor con diseño moderno -->
+    <div class="container">
+        <h2>Verificar CURP</h2>
+        <input type="text" id="curp" placeholder="Ingrese su CURP">
+        <button id="btnVerificar">Verificar</button>
+        <p id="mensaje"></p>
+    </div>
+
+    <!-- ✅ Configuración Firebase Modular -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAUxl9D7usrEfXBfizdQtB4YJiStRrp4dE",
+            authDomain: "une-curp.firebaseapp.com",
+            projectId: "une-curp",
+            storageBucket: "une-curp.firebasestorage.app",
+            messagingSenderId: "446062022569",
+            appId: "1:446062022569:web:fe7d5ba09062726f48feb8",
+            measurementId: "G-E67Z4LQK8N"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        console.log("🔥 Firebase Inicializado");
+
+        async function verificarCURP() {
+            const curp = document.getElementById('curp').value.trim();
+            if (!curp) {
+                document.getElementById('mensaje').innerText = 'Por favor, ingrese un CURP válido';
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "usuarios", curp);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    document.getElementById('mensaje').innerText = `✅ CURP registrado: ${docSnap.data().nombre}`;
+                    document.getElementById('mensaje').style.color = "green";
+                } else {
+                    document.getElementById('mensaje').innerText = '❌ CURP disponible para registro';
+                    document.getElementById('mensaje').style.color = "red";
+                }
+            } catch (error) {
+                console.error("❌ Error verificando CURP:", error);
+                document.getElementById('mensaje').innerText = 'Error al verificar el CURP';
+                document.getElementById('mensaje').style.color = "red";
+            }
+        }
+
+        document.getElementById("btnVerificar").addEventListener("click", verificarCURP);
+    </script>
+</body>
+</html>
+
+
+
